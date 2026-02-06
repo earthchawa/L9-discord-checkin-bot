@@ -71,6 +71,10 @@ app.get('/health', (req, res) => {
   });
 });
 
+// เพิ่มส่วนนี้เข้าไปครับ: ประตูหน้าบ้าน
+app.get('/', (req, res) => {
+  res.send('<h1>🦆 MadDuck Bot is Online!</h1><p>Status: Ready to work.</p>');
+});
 
 app.listen(port, () => {
     console.log(`✅ Server is listening on port ${port}`);
