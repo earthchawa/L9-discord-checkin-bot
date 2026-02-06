@@ -94,6 +94,8 @@ app.listen(port, () => {
 
     // 2. พยายาม Login พร้อมดักจับ Error
     console.log("⏳ Attempting to login to Discord...");
+    client.on('debug', info => console.log(`[DEBUG] ${info}`));
+    client.on('warn', info => console.log(`[WARN] ${info}`));
     client.login(token)
         .then(() => {
             console.log("🎉 Login Successful! Waiting for 'ready' event...");
