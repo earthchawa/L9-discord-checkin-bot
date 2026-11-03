@@ -1,38 +1,49 @@
 # L9 Discord Check-in Bot 🦆
 
-A lightweight, automated Discord check-in bot and web dashboard built for the **LORDNINE (L9)** MMORPG. Designed to help guild leaders track member attendance and activity without manual data entry.
+A lightweight attendance system for the **LORDNINE (L9)** MMORPG guild **MadDuck**. It checks who is in the guild's Discord voice channel and logs attendance to Google Sheets, so guild leaders never have to take roll call by hand.
 
-<img width="1170" height="777" alt="discord-checkin-bot" src="https://github.com/user-attachments/assets/4b180759-113f-454d-9105-2f69c508c1da" />
+<img width="1170" height="777" alt="MadDuck Attendance dashboard" src="https://github.com/user-attachments/assets/4b180759-113f-454d-9105-2f69c508c1da" />
 
 ## 🏗️ Architecture
-This project uses a serverless architecture, bridging Discord and Google Workspace:
-*   **Frontend/Interface:** Discord commands (for users) and a Web Dashboard (for admins).
-*   **Backend/API:** Google Apps Script (handles webhooks from Discord).
-*   **Database:** Google Sheets (stores user data, check-in timestamps, and guild stats).
+
+```
+Google Sheets + Apps Script  ──POST /check-voice──▶  Node.js bot (this repo)  ──▶  Discord API
+   (dashboard & database)    ◀──── members in voice ────  (Express + discord.js)
+```
+
+- **Bot service (this repo):** an Express server with a discord.js client. `POST /check-voice` returns every member currently in a voice channel.
+- **Google Apps Script:** calls the bot on check-in, writes results to the sheet and serves the **MadDuck Attendance** dashboard (summary, leaderboard, weekly view).
+- **Google Sheets:** the database for members, check-in timestamps and attendance %.
 
 ## ✨ Features
-*   **Automated Check-ins:** Guild members can check in directly via a Discord channel.
-*   **Real-time Database:** All check-ins are instantly logged to a connected Google Sheet.
-*   **Web Dashboard:** A deployed Google Apps Script web app to visualize attendance data.
-*   **Zero Hosting Costs:** Fully powered by Google Apps Script and Google Sheets.
 
-## 🚀 Setup & Installation
-1.  **Google Sheet Setup:**
-    *   Create a new Google Sheet.
-    *   Go to `Extensions > Apps Script` and paste the provided `.gs` code.
-    *   Deploy as a Web App (Set access to "Anyone").
-2.  **Discord Bot Setup:**
-    *   Create a bot on the [Discord Developer Portal](https://discord.com/developers/applications).
-    *   Set up a webhook or point your bot's interaction endpoint URL to the Apps Script Web App URL.
-3.  **Environment Variables:**
-    *   Ensure your Apps Script has the correct Discord Bot Token and Google Sheet ID configured.
+- **One-click check-in:** a single button snapshots everyone in the voice channel.
+- **Attendance dashboard:** total sessions, member count, average attendance and a leaderboard.
+- **Weekly view:** attendance broken down week by week.
+- **Low cost:** the bot runs on a free Node.js host (e.g. Render); everything else is Google Workspace.
+
+## 🔌 API
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/check-voice` | Body `{ "guildId", "channelId" }` → `{ channelName, count, members: [{ id, username, displayName, tag }] }` |
+| `GET` | `/health` | Bot status |
+
+## 🚀 Setup
+
+1. **Discord bot:** create an app in the [Discord Developer Portal](https://discord.com/developers/applications), enable the **Server Members** intent, and invite the bot to your server.
+2. **Run the bot:**
+   ```bash
+   npm install
+   DISCORD_BOT_TOKEN=your-token npm start
+   ```
+   Or deploy to Render / Railway with `DISCORD_BOT_TOKEN` set as an environment variable.
+3. **Google Sheet:** in `Extensions › Apps Script`, call `POST <bot-url>/check-voice` with your guild and voice channel IDs, then deploy the script as a web app for the dashboard.
 
 ## 💻 Tech Stack
-*   JavaScript (Node.js / Google Apps Script)
-*   Discord API
-*   Google Sheets API
-*   HTML/CSS (for the Web Dashboard)
+
+Node.js · Express · discord.js v14 · Google Apps Script · Google Sheets · HTML/CSS
 
 ---
-*Created by [earthchawa](https://github.com/earthchawa)
-*
+
+*Created by [Earth](https://github.com/earthchawa) · [earthcha.com](https://earthcha.com)*
