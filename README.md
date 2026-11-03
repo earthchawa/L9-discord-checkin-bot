@@ -35,7 +35,8 @@ Google Sheets + Apps Script  ──POST /check-voice──▶  Node.js bot (this
 2. **Run the bot:**
    ```bash
    npm install
-   DISCORD_BOT_TOKEN=your-token npm start
+   echo DISCORD_BOT_TOKEN=your-token > .env
+   npm start
    ```
    Or deploy to Render / Railway with `DISCORD_BOT_TOKEN` set as an environment variable.
 3. **Google Sheet:** in `Extensions › Apps Script`, call `POST <bot-url>/check-voice` with your guild and voice channel IDs, then deploy the script as a web app for the dashboard.
